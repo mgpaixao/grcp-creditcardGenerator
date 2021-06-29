@@ -1,0 +1,39 @@
+syntax = "proto3"; //Definição da linguagem de programação usada neste arquivo
+
+package ccgenerator; 
+
+//Arquivo .PROTO
+
+message CreditCards { //Declaração da variaveis principais, armazenadas no banco. Função requesta da função CreateCC
+	//Variaveis gRPC
+	string id=1;
+	string email=2;
+	string CreditCardNumber=3;
+}
+
+message CreateCCResponse{ //Função de resposta da Função CreateCC
+	string cardresponse = 1;
+}
+
+message ListCreditCardsRequest{ //Função de request de ListCC para listar os cartoes de crédito filtrado pela variavel email
+	string email = 1; 
+}
+
+message ListCreditCardsResponse{ // O retorno da função ListCC é resposta em lista do filtro aplicado.
+	CreditCards list = 1;
+	bool resp = 2;
+}
+
+message ListCheckRequest{ // Função criada para verificar duplicidade do número do cartão de crédito no banco de dados. Função de ListCheck
+	string CreditCardNumber = 1;
+}
+message ListCheckResponse{ // Resposta em lista da função ListCheck
+	CreditCards list = 1;
+}
+
+
+service CreditCardService{
+	rpc CreateCC (CreditCards) returns (CreateCCResponse){} //Função rpc CreateCC que cria numeros aleatórios de cartão de crédito.
+	rpc ListCC (ListCreditCardsRequest) returns (stream ListCreditCardsResponse){} //Função que lista os cartoes de crédito registrados no email filtrado.
+	rpc ListCheck (ListCheckRequest) returns (stream ListCheckResponse){} //Função que verifica no banco de dados duplicidade de cartões de crédito.
+}
